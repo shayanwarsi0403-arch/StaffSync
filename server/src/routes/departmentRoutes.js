@@ -12,9 +12,11 @@ import { validateRequest } from '../middleware/validateRequest.js';
 
 const router = express.Router();
 
-router.use(authenticateUser);
-
+// Allow public GET / for registration dropdown & company listings
 router.get('/', getDepartments);
+
+// Mutating routes require authentication & HR role
+router.use(authenticateUser);
 router.post(
   '/',
   authorizeRoles('HR'),

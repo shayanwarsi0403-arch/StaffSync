@@ -19,6 +19,9 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('user', JSON.stringify(user));
       return { token, user };
     } catch (err) {
+      if (!err.response) {
+        return rejectWithValue('Cannot connect to backend server (http://localhost:5000). Please ensure the backend server is running.');
+      }
       const message = err.response?.data?.message || 'Login failed. Please check your credentials.';
       return rejectWithValue(message);
     }
@@ -35,6 +38,9 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem('user', JSON.stringify(user));
       return { token, user };
     } catch (err) {
+      if (!err.response) {
+        return rejectWithValue('Cannot connect to backend server (http://localhost:5000). Please ensure the backend server is running.');
+      }
       const message = err.response?.data?.message || 'Registration failed.';
       return rejectWithValue(message);
     }

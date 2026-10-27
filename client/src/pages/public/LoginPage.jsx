@@ -42,6 +42,27 @@ const LoginPage = () => {
     }
   };
 
+  const handleDemoLogin = async (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    dispatch(clearError());
+
+    try {
+      const result = await dispatch(loginUser({ email: demoEmail, password: demoPassword })).unwrap();
+      toast.success(`Welcome back, ${result.user.name}!`);
+
+      if (result.user.role === 'HR') {
+        navigate('/hr/dashboard');
+      } else if (result.user.role === 'MANAGER') {
+        navigate('/manager/dashboard');
+      } else {
+        navigate('/employee/dashboard');
+      }
+    } catch (err) {
+      // Handled in redux
+    }
+  };
+
   const handleFillDemo = (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
@@ -180,29 +201,38 @@ const LoginPage = () => {
 
           {/* Quick Demo Credentials Autofill */}
           <div className="mt-4 pt-3 border-top">
-            <small className="d-block text-muted text-center mb-2 fw-medium">Quick Demo Autofill</small>
+            <div className="d-flex align-items-center justify-content-between mb-2">
+              <small className="text-muted fw-semibold">⚡ One-Click Demo Login</small>
+              <small className="text-muted" style={{ fontSize: '0.72rem' }}>Instant role sign in</small>
+            </div>
             <div className="d-flex gap-2">
               <button
                 type="button"
-                onClick={() => handleFillDemo('hr@staffsync.com', 'Admin@123')}
-                className="btn btn-sm btn-outline-secondary flex-fill"
-                style={{ fontSize: '0.75rem' }}
+                disabled={loading}
+                onClick={() => handleDemoLogin('hr@staffsync.com', 'Admin@123')}
+                className="btn btn-sm btn-outline-primary flex-fill fw-medium py-1.5"
+                style={{ fontSize: '0.78rem' }}
+                title="Sign in as HR Administrator"
               >
                 HR Admin
               </button>
               <button
                 type="button"
-                onClick={() => handleFillDemo('manager.sarah@staffsync.com', 'Manager@123')}
-                className="btn btn-sm btn-outline-secondary flex-fill"
-                style={{ fontSize: '0.75rem' }}
+                disabled={loading}
+                onClick={() => handleDemoLogin('manager.sarah@staffsync.com', 'Manager@123')}
+                className="btn btn-sm btn-outline-primary flex-fill fw-medium py-1.5"
+                style={{ fontSize: '0.78rem' }}
+                title="Sign in as Manager"
               >
                 Manager
               </button>
               <button
                 type="button"
-                onClick={() => handleFillDemo('john.doe@staffsync.com', 'Employee@123')}
-                className="btn btn-sm btn-outline-secondary flex-fill"
-                style={{ fontSize: '0.75rem' }}
+                disabled={loading}
+                onClick={() => handleDemoLogin('john.doe@staffsync.com', 'Employee@123')}
+                className="btn btn-sm btn-outline-primary flex-fill fw-medium py-1.5"
+                style={{ fontSize: '0.78rem' }}
+                title="Sign in as Employee"
               >
                 Employee
               </button>
